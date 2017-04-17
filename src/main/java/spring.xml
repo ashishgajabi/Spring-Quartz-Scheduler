@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.3.xsd">
+
+
+	<bean name="myJob"
+		class="org.springframework.scheduling.quartz.JobDetailFactoryBean">
+		<property name="jobClass"
+			value="in.blogspot.ashish4java.complexspringquartzexample.scheduler.MyJob" />
+		<property name="jobDataAsMap">
+			<map>
+				<entry key="jobState" value-ref="jobInputData" />
+			</map>
+		</property>
+		<property name="durability" value="true" />
+	</bean>
+	<bean name="jobInputData"
+		class="in.blogspot.ashish4java.complexspringquartzexample.scheduler.MyJobInput">
+		<property name="processData">
+			<list value-type="java.lang.String">
+				<value>This</value>
+				<value>is</value>
+				<value>Spring</value>
+				<value>Quartz</value>
+				<value>example</value>
+			</list>
+		</property>
+	</bean>
+
+	<bean id="cronTrigger"
+		class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+		<property name="jobDetail" ref="myJob" />
+		<property name="cronExpression" value="0/3 * * * * ?" />
+	</bean>
+
+	<bean class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+		<property name="triggers">
+			<list>
+				<ref bean="cronTrigger" />
+			</list>
+		</property>
+		<property name="jobDetails">
+			<list>
+				<ref bean="myJob" />
+			</list>
+		</property>
+	</bean>
+
+</beans>
